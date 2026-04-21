@@ -1,0 +1,220 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.logo img {
+  height: 32px;
+}
+
+/* ── LANGUAGE ── */
+.lang-wrapper {
+  position: relative;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ebebeb;
+  border-radius: 50px;
+  padding: 7px 13px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lang-menu {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  display: none;
+  overflow: hidden;
+  z-index: 200;
+  min-width: 140px;
+}
+
+.lang-menu div {
+  padding: 11px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.lang-menu div:hover {
+  background: #f5f5f5;
+}
+
+/* ── TITLE ── */
+.title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-top: 36px;
+  padding: 0 24px;
+  line-height: 1.4;
+}
+
+/* ── PIN INPUTS ── */
+.pin-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 28px 0 6px;
+}
+
+.pin-container input {
+  width: 58px;
+  height: 68px;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 14px;
+  border: 1.5px solid #ddd;
+  background: #fff;
+  outline: none;
+  color: #222;
+  /* Fix #7: removed useless webkit-spin & moz-appearance
+     (those only work on type="number", not type="tel") */
+  caret-color: transparent;
+  transition: border-color 0.2s;
+}
+
+.pin-container input:focus {
+  border-color: #aaa;
+}
+
+/* ── ERROR ── */
+.error-msg {
+  text-align: center;
+  color: #e53935;
+  font-size: 13px;
+  min-height: 20px;
+  margin: 8px 0 14px;
+}
+
+/* ── OPEN BUTTON ──
+   Fix #4: disabled vs enabled now have visible difference
+   disabled  → lighter grey (#d0d0d0) + grey text
+   enabled   → darker grey (#b8b8b8) + dark text + hover feedback
+   (no green, per earlier requirement)                              */
+.btn {
+  display: block;
+  margin: 0 auto;
+  width: calc(100% - 40px);
+  max-width: 400px;
+  height: 54px;
+  border-radius: 30px;
+  border: none;
+  background: #d0d0d0;
+  color: #aaa;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: default;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn:not(:disabled) {
+  background: #b8b8b8;
+  color: #333;
+  cursor: pointer;
+}
+
+.btn:not(:disabled):hover {
+  background: #a8a8a8;
+}
+
+/* ── INFO IMAGE ── */
+.info img {
+  display: block;
+  width: calc(100% - 40px);
+  max-width: 400px;
+  margin: 36px auto 0;
+  border-radius: 16px;
+}
+
+/* ── DOCUMENT PAGE ──
+   Fix #6: padding-bottom added so content isn't hidden behind
+   the fixed download button                                    */
+#docPage {
+  display: none;
+  padding-bottom: 100px;
+}
+
+/* Fix #5: removed .pdf-embed (no longer needed — both docs are images)
+   Fix #5 note: border-radius on iframe was cosmetic-only anyway      */
+
+/* Image viewer */
+.doc-img {
+  display: block;
+  width: calc(100% - 32px);
+  max-width: 600px;
+  margin: 20px auto 0;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.download-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  border: none;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  transition: transform 0.15s, box-shadow 0.15s;
+  z-index: 100;
+}
+
+.download-btn img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.download-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+}
+
+.download-btn:active {
+  transform: scale(0.96);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 400px) {
+  .pin-container { gap: 8px; }
+  .pin-container input {
+    width: 52px;
+    height: 60px;
+    font-size: 24px;
+    border-radius: 12px;
+  }
+  .title { font-size: 16px; margin-top: 28px; }
+  .btn   { height: 50px;   font-size: 16px; }
+}

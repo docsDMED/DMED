@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMED</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PIN PAGE -->
+  <div id="pinPage">
+
+    <div class="header">
+      <div class="logo">
+        <img src="documents.png" alt="DMED">
+      </div>
+      <div class="lang-wrapper">
+        <div class="lang-btn" id="langBtn">🌐 <span id="currentLang">RU</span></div>
+        <div class="lang-menu" id="langMenu">
+          <div onclick="setLang('ru')">Russian</div>
+          <div onclick="setLang('en')">English</div>
+          <div onclick="setLang('uz')">O'zbek</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="title" id="title">Введите PIN-код для просмотра документа</p>
+
+    <!-- Fix #8: removed useless pattern attr (no <form> = never validated) -->
+    <div class="pin-container">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+    </div>
+
+    <p class="error-msg" id="errorMsg"></p>
+
+    <button class="btn" id="openBtn" onclick="checkPIN()" disabled>
+      <span id="btnText">Открыть</span>
+    </button>
+
+    <div class="info">
+      <img src="example.jpg" alt="">
+    </div>
+
+  </div>
+
+  <!-- DOCUMENT PAGE — simplified: both PINs show images now -->
+  <div id="docPage">
+    <img class="doc-img" id="docImg" src="" alt="Document">
+    <button class="download-btn" onclick="downloadFile()">
+      <img src="printer.png" alt="print">
+    </button>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
