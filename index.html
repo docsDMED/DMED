@@ -13,7 +13,7 @@
 
     <div class="header">
       <div class="logo">
-        <img src="documents.png" alt="DMED">
+        <img src="images/documents.png" alt="DMED">
       </div>
       <div class="lang-wrapper">
         <div class="lang-btn" id="langBtn">🌐 <span id="currentLang">RU</span></div>
@@ -27,7 +27,6 @@
 
     <p class="title" id="title">Введите PIN-код для просмотра документа</p>
 
-    <!-- Fix #8: removed useless pattern attr (no <form> = never validated) -->
     <div class="pin-container">
       <input type="tel" maxlength="1" inputmode="numeric">
       <input type="tel" maxlength="1" inputmode="numeric">
@@ -42,19 +41,24 @@
     </button>
 
     <div class="info">
-      <img src="example.jpg" alt="">
+      <img src="images/example.jpg" alt="">
     </div>
 
   </div>
 
-  <!-- DOCUMENT PAGE — simplified: both PINs show images now -->
+  <!-- DOCUMENT PAGE -->
   <div id="docPage">
     <img class="doc-img" id="docImg" src="" alt="Document">
     <button class="download-btn" onclick="downloadFile()">
-      <img src="printer.png" alt="print">
+      <img src="images/printer.png" alt="print">
     </button>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // jsPDF UMD exposes itself as window.jspdf.jsPDF
+    const { jsPDF } = window.jspdf;
+  </script>
   <script src="app.js"></script>
 
 </body>

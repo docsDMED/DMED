@@ -1,22 +1,23 @@
 // ── DOCUMENTS ──────────────────────────────────────────────────────────
-// Fix: PIN 1308 now shows dmed1.jpg (image) instead of PDF.
-// To add a new document, just add one line here.
+// All images live inside the images/ folder.
+// To add a new document, add one entry here — nothing else to change.
 const DOCS = {
-  "5174": { src: "dmed.jpg",  download: "DMED.jpg"  },
-  "1308": { src: "dmed1.jpg", download: "DMED1.jpg" }
+  "5174": { src: "images/dmed.jpg",    download: "dmed.pdf"    },
+  "1308": { src: "images/dmed1.jpg",   download: "dmed.pdf"   },
+  "8761": { src: "images/dmed_tm.jpg", download: "dmed.pdf" }
 };
 
 // ── LANGUAGE STRINGS ───────────────────────────────────────────────────
 const LANG = {
-  ru: { title: "Введите PIN-код для просмотра документа", btn: "Открыть", wrong: "Неверный PIN-код"  },
-  en: { title: "Enter PIN code to view document",         btn: "Open",    wrong: "Wrong PIN code"    },
+  ru: { title: "Введите PIN-код для просмотра документа", btn: "Открыть", wrong: "Неверный PIN-код"   },
+  en: { title: "Enter PIN code to view document",         btn: "Open",    wrong: "Wrong PIN code"     },
   uz: { title: "Hujjatni ko'rish uchun PIN kodni kiriting", btn: "Ochish", wrong: "PIN kod noto'g'ri" }
 };
 
 let currentLang = "ru";
-let currentPin  = null; // Fix #2: store active doc instead of re-searching viewers
+let currentPin  = null;
 
-// ── PIN INPUTS ──────────────────────────────────────────────────────────
+// ── PIN INPUTS ─────────────────────────────────────────────────────────
 const inputs   = Array.from(document.querySelectorAll(".pin-container input"));
 const openBtn  = document.getElementById("openBtn");
 const errorMsg = document.getElementById("errorMsg");
@@ -43,7 +44,7 @@ function getPin() {
   return inputs.map(i => i.value).join("");
 }
 
-// ── CHECK PIN ───────────────────────────────────────────────────────────
+// ── CHECK PIN ──────────────────────────────────────────────────────────
 function checkPIN() {
   const pin = getPin();
   const doc = DOCS[pin];
@@ -58,30 +59,44 @@ function checkPIN() {
 
   currentPin = pin;
   document.getElementById("pinPage").style.display = "none";
-  document.getElementById("docPage").style.display  = "block";
+  document.getElementById("docPage").style.display = "block";
   document.getElementById("docImg").src = doc.src;
 }
 
-// ── DOWNLOAD ─────────────────────────────────────────────────────────────
-// Fix #1 & #2: dead code removed, currentPin used directly.
-// Offer D: iOS Safari cannot trigger file downloads via anchor.click()
-//           on relative paths — open the image in a new tab instead.
+// ── DOWNLOAD ───────────────────────────────────────────────────────────
+// Converts the current image to a PDF (A4, portrait) and saves it.
+// iOS Safari fix: anchor.click() doesn't trigger downloads — open new tab.
 function downloadFile() {
   if (!currentPin) return;
   const doc = DOCS[currentPin];
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS) {
-    window.open(doc.src, "_blank");
-    return;
-  }
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = doc.src;
 
-  const a = document.createElement("a");
-  a.href     = doc.src;
-  a.download = doc.download;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  img.onload = () => {
+    // A4 in mm: 210 × 297. jsPDF uses mm by default.
+    const A4_W = 210;
+    const A4_H = 297;
+
+    // Scale image to fit A4 width, preserving aspect ratio.
+    const ratio    = img.naturalHeight / img.naturalWidth;
+    const imgW     = A4_W;
+    const imgH     = Math.min(A4_W * ratio, A4_H);
+    const offsetY  = (A4_H - imgH) / 2; // vertical centering
+
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    pdf.addImage(img, "JPEG", 0, offsetY, imgW, imgH);
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      // iOS: open PDF blob in new tab (anchor.click download not supported)
+      const blob = pdf.output("blob");
+      window.open(URL.createObjectURL(blob), "_blank");
+    } else {
+      pdf.save(doc.download);
+    }
+  };
 }
 
 // ── LANGUAGE ───────────────────────────────────────────────────────────
@@ -102,8 +117,6 @@ function setLang(lang) {
   document.getElementById("btnText").textContent     = s.btn;
   document.getElementById("currentLang").textContent = lang.toUpperCase();
   document.getElementById("langMenu").style.display  = "none";
-  // Fix #3: clear stale error message on language switch
-  errorMsg.textContent = "";
-  // Fix #9: keep <html lang> in sync for accessibility / SEO
-  document.documentElement.lang = lang;
+  errorMsg.textContent                               = "";
+  document.documentElement.lang                      = lang;
 }
